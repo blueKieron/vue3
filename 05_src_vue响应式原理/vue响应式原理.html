@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script type="text/javascript">
+      let person = {
+        name: "xxx",
+        age: 18,
+      };
+      // vue2中响应式原理
+      // #region
+      // let p = {};
+      // Object.defineProperty(p, "name", {
+      //   configurable: true,
+      //   get() {
+      //     return person.name;
+      //   },
+      //   set(value) {
+      //     console.log("有人修改了name属性，去更新界面");
+      //     person.name = value;
+      //   },
+      // });
+
+      // p.name = "yyy";
+      // p.sex = "man"; //
+      // delete p.name; // 修改和删除不会触发响应式
+      // #endregion
+
+      // vue3
+      // - 通过Proxy（代理）:  拦截对象中任意属性的变化, 包括：属性值的读写、属性的添加、属性的删除等。
+      // - 通过Reflect（反射）:  对源对象的属性进行操作。
+      let p = new Proxy(person, {
+        // 读取
+        get(target, propName) {
+          console.log(`正在读取${propName}`);
+          return Reflect.get(target, propName);
+        },
+        // 修改 新增
+        set(target, propName, value) {
+          console.log(`正在修改${propName}`);
+          return Reflect.set(target, propName, value);
+        },
+        // 删除
+        deleteProperty(target, propName) {
+          console.log(`正在删除${propName}`);
+          return Reflect.deleteProperty(target, propName);
+        },
+      });
+    </script>
+  </head>
+  <body></body>
+</html>
